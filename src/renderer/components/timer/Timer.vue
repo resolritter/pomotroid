@@ -128,6 +128,7 @@ import appTimerDial from '@/components/timer/Timer-dial'
 import appTimerFooter from '@/components/timer/Timer-footer'
 import { EventBus } from '@/utils/EventBus'
 import { logger } from '@/utils/logger'
+import { writeFileSync, unlinkSync } from 'fs'
 
 export default {
   components: {
@@ -284,6 +285,7 @@ export default {
 
     pauseTimer() {
       if (!this.timerWorker) return
+      unlinkSync('/tmp/pomotroid_state')
       this.timerWorker.postMessage({ event: 'pause' })
       this.timerActive = !this.timerActive
       logger.info(`${this.currentRoundDisplay} round paused`)
@@ -291,6 +293,7 @@ export default {
 
     resetTimer() {
       if (!this.timerWorker) return
+      unlinkSync('/tmp/pomotroid_state')
       this.timerWorker.postMessage({ event: 'reset' })
       this.timerActive = !this.timerActive
       this.timerStarted = false
@@ -298,12 +301,14 @@ export default {
 
     resumeTimer() {
       if (!this.timerWorker) return
+      writeFileSync('/tmp/pomotroid_state', '')
       this.timerWorker.postMessage({ event: 'resume' })
       this.timerActive = true
     },
 
     startTimer() {
       if (!this.timerWorker) return
+      writeFileSync('/tmp/pomotroid_state', '')
       this.timerWorker.postMessage({ event: 'start' })
       this.timerActive = true
       this.timerStarted = true

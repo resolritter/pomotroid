@@ -4,6 +4,7 @@ import { logger } from './../renderer/utils/logger'
 import { createLocalStore } from './../renderer/utils/LocalStore'
 import { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
 
+const fs = require('fs')
 const path = require('path')
 const localStore = createLocalStore()
 
@@ -48,6 +49,10 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+app.on('before-quit', () => {
+  fs.unlinkSync('/tmp/pomotroid_state')
 })
 
 ipcMain.on('toggle-alwaysOnTop', (event, arg) => {

@@ -30,10 +30,14 @@ export default {
   methods: {
     callNotification(opts) {
       if (opts.body.endsWith('break.')) {
-        const child = cp.spawn('i3-nagbar', ['-m', opts.body], {
-          detached: true,
-          stdio: ['ignore', 'ignore', 'ignore']
-        })
+        const child = cp.spawn(
+          'dzen2',
+          ['-p', '-bg', '#8bbe2c', '-m', '-e', 'button1=exit'],
+          {
+            detached: true,
+            stdio: ['ignore', 'ignore', 'ignore']
+          }
+        )
         child.unref()
       }
     },

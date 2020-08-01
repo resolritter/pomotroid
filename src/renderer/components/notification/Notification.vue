@@ -1,9 +1,9 @@
-<template>
-</template>
+<template> </template>
 
 <script>
 import { EventBus } from '@/utils/EventBus'
 const path = require('path')
+const cp = require('child_process')
 
 export default {
   name: 'Notification',
@@ -29,11 +29,13 @@ export default {
 
   methods: {
     callNotification(opts) {
-      this.notification = new Notification(opts.title, {
-        body: opts.body,
-        icon: opts.icon || path.join('static', 'icon.png'),
-        silent: true
-      })
+      if (opts.body.endsWith('break.')) {
+        const child = cp.spawn('i3-nagbar', ['-m', opts.body], {
+          detached: true,
+          stdio: ['ignore', 'ignore', 'ignore']
+        })
+        child.unref()
+      }
     },
 
     notifyLongBreak() {
